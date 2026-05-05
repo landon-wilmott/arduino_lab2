@@ -328,9 +328,9 @@ void fsmCollisionDetection() {
     case 0: //collision detected
       //There is an obstacle, stop the robot
       ActionCollision = COLLISION_ON; // Sets the action to turn on the collision LED
-      ActionRobotDrive = DRIVE_STOP;
-      /* Add code in milestone 2 to stop the robot's wheels - Hint: ActionRobotDrive = ________ */
-      
+
+      // stops robot from moving if collision is detected
+      ActionRobotDrive = DRIVE_STOP;      
       
       //State transition logic
       if ( SensedCollision == DETECTION_NO) {
