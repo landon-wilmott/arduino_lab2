@@ -328,6 +328,7 @@ void fsmCollisionDetection() {
     case 0: //collision detected
       //There is an obstacle, stop the robot
       ActionCollision = COLLISION_ON; // Sets the action to turn on the collision LED
+      ActionRobotDrive = DRIVE_STOP;
       /* Add code in milestone 2 to stop the robot's wheels - Hint: ActionRobotDrive = ________ */
       
       
@@ -445,34 +446,34 @@ void fsmMoveServoUpAndDown() {
       } else if (SensedLightUp == DETECTION_YES){
         moveServoState = 2;
       }
-
       break;
 
     case 1: // moves the servo down
       ActionServoMove = SERVO_MOVE_DOWN;
-      if (SensedLightDown == DETECTION_NO){
-        moveServoState = 0;
-      } else if (SensedLightUp == DETECTION_YES){
+      if (SensedLightUp == DETECTION_YES){
         moveServoState = 3;
-      }
+      } else if (SensedLightDown == DETECTION_NO){
+        moveServoState = 0;
+      } 
       break;
 
     case 2: // moves the servo up
       ActionServoMove = SERVO_MOVE_UP;
-      if (SensedLightUp == DETECTION_NO){
-        moveServoState = 0;
-      } else if (SensedLightDown == DETECTION_YES){
+      if (SensedLightDown == DETECTION_YES){
           moveServoState = 3;
+      } else if (SensedLightUp == DETECTION_NO){
+        moveServoState = 0;
       }
       break;
     
     case 3:
      ActionServoMove = SERVO_MOVE_STOP;
-     if (SensedLightDown = DETECTION_NO){
-      moveServoState = 2;
-     } else if (SensedLightUp = DETECTION_NO){
-      moveServoState = 1;
+     if (SensedLightDown == DETECTION_NO){
+       moveServoState = 2;
+     } else if (SensedLightUp == DETECTION_NO){
+       moveServoState = 1;
      }
+     break;
 
     default: //error handling
       moveServoState = 0;
