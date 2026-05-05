@@ -225,7 +225,18 @@ void RobotPerception() {
 
       
   /* Add code to detect if light is up or down. Lab 2 milestone 3*/
-
+  // logic for sensing button 1 presses
+  if (isButtonPushed(BUTTON_1)){
+    SensedLightDown = DETECTION_YES;
+  } else {
+    SensedLightDown = DETECTION_NO;
+  }
+  // logic for sensing button 5 pressed
+  if (isButtonPushed(BUTTON_5)){
+    SensedLightUp = DETECTION_YES;
+  } else {
+    SensedLightUp = DETECTION_NO;
+  }
   
 
    // Capacitive Sensor
@@ -372,47 +383,37 @@ void fsmSteerRobot() {
       ActionRobotDrive =  DRIVE_LEFT; /*added*/
       
       //State transition logic
-      if (SensedLightRight == DETECTION_YES/*added*/) {
-        steerRobotState = 3; /*added*/
-      } else if (SensedLightLeft == DETECTION_NO /*added*/ ) {
-        steerRobotState = 0; /*added*/
+      if (SensedLightRight == DETECTION_YES) {
+        steerRobotState = 3;
+      } else if (SensedLightLeft == DETECTION_NO) {
+        steerRobotState = 0;
       }
       break;
     
     case 2: //light is to the right of robot
       //The light is on the right, turn right
-      ActionRobotDrive =  DRIVE_RIGHT; /*added*/
+      ActionRobotDrive =  DRIVE_RIGHT;
       
       //State transition logic
-      if (SensedLightLeft == DETECTION_YES/*added*/) {
-        steerRobotState = 3; /*added*/
-      } else if (SensedLightRight == DETECTION_NO /*added*/ ) {
-        steerRobotState = 0; /*added*/
+      if (SensedLightLeft == DETECTION_YES) {
+        steerRobotState = 3;
+      } else if (SensedLightRight == DETECTION_NO) {
+        steerRobotState = 0;
       }
       break;
 
-    case 3:
-      ActionRobotDrive =  DRIVE_STRAIGHT; /*added*/
+    case 3://light is in front of robot
+      //The light is straight, go straight
+      ActionRobotDrive =  DRIVE_STRAIGHT;
 
       //State transition logic
-      if (SensedLightLeft == DETECTION_NO/*added*/) {
-        if (SensedLightRight == DETECTION_NO /*added*/ ) {
-           steerRobotState = 0; /*added*/
-        } else {
-          steerRobotState = 2;
-        }
-      } else{
-        steerRobotState = 1; /*added*/
+      if (SensedLightLeft == DETECTION_NO) {
+           steerRobotState = 2;
+      } else if (SensedLightRight == DETECTION_NO) {
+           steerRobotState = 1;
       }
       break;
-      
-    /* light is on both right and left
-      *Add Code: Add in a case 3 for when the light is on both the right and left 
-      *Think about what actions you need to implement and 
-      *what changes could occur that would cause a transition to another 
-      *state. Don't forget the break statement at the end of the case. */
-      
-      
+            
     default: // error handling
     {
       steerRobotState = 0;
@@ -434,6 +435,48 @@ void fsmMoveServoUpAndDown() {
   //Remember no light or light in front = servo doesn't move
   //Light above = servo moves up
   //Light below = servo moves down
+
+  switch(moveServoState){
+    case 0:
+      ActionServoMove = SERVO_MOVE_STOP;
+
+      if (SensedLightDown == DETECTION_YES){
+        moveServoState = 1;
+      } else if (SensedLightUp == DETECTION_YES){
+        moveServoState = 2;
+      }
+
+      break;
+
+    case 1: // moves the servo down
+      ActionServoMove = SERVO_MOVE_DOWN;
+      if (SensedLightDown == DETECTION_NO){
+        moveServoState = 0;
+      } else if (SensedLightUp == DETECTION_YES){
+        moveServoState = 3;
+      }
+      break;
+
+    case 2: // moves the servo up
+      ActionServoMove = SERVO_MOVE_UP;
+      if (SensedLightUp == DETECTION_NO){
+        moveServoState = 0;
+      } else if (SensedLightDown == DETECTION_YES){
+          moveServoState = 3;
+      }
+      break;
+    
+    case 3:
+     ActionServoMove = SERVO_MOVE_STOP;
+     if (SensedLightDown = DETECTION_NO){
+      moveServoState = 2;
+     } else if (SensedLightUp = DETECTION_NO){
+      moveServoState = 1;
+     }
+
+    default: //error handling
+      moveServoState = 0;
+  }
   
 }
 
@@ -510,13 +553,14 @@ void MoveServo() {
   /* Add CurrentServoAngle in lab 6 */
   switch(ActionServoMove) {
     case SERVO_MOVE_STOP:
-      /* Add code in milestone 3 */
+      doTurnLedOff(LED_1);
+      doTurnLedOff(LED_5);
       break;
     case SERVO_MOVE_UP:
-      /* Add code in milestone 3 */
+      doTurnLedOn(LED_5);
       break;
     case SERVO_MOVE_DOWN:
-      /* Add code in milestone 3 */
+      doTurnLedOn(LED_1);
       break;
   }
 }
