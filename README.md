@@ -1,4 +1,4 @@
-# Arduino Lab 2: Robot Logic Control
+# Arduino Robot Logic Control
 
 ## Project Objective
 This project focuses on developing the foundational control logic for a future robot. Using an Arduino, the system interprets inputs from multiple sensors (simulated by push buttons) to determine movement and collision avoidance behavior.
