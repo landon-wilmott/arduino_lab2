@@ -41,14 +41,14 @@ your sensors and servos. */
 
 // LED pins (note that digital pins do not need "D" in front of them)
 #define LED_1   6       // Far Left LED - Servo Up
-#define LED_2   5       // Left Middle LED  - Left Motor
 #define LED_3   4       // Middle LED - Collision
-#define LED_4   3       // Right Middle LED - Right Motor
 #define LED_5   2       // Far Right LED - Servo Down
 
 
 // Motor enable pins - Lab 3
 // These will replace LEDs 2 and 4
+#define H_BRIDGE_ENA  5 //LED_2
+#define H_BRIDGE_ENB  3  //LED_4
 
 // Photodiode pins - Lab 5
 // These will replace buttons 1, 2, 4, 5
@@ -147,9 +147,9 @@ void setup() {
   
   //Set up output pins
   pinMode(LED_1, OUTPUT);
-  pinMode(LED_2, OUTPUT);
+  pinMode(H_BRIDGE_ENA, OUTPUT);
   pinMode(LED_3, OUTPUT);
-  pinMode(LED_4, OUTPUT);
+  pinMode(H_BRIDGE_ENB, OUTPUT);
   pinMode(LED_5, OUTPUT);
   
   //Set up input pins
@@ -517,26 +517,26 @@ void RobotAction() {
   // This drives the main motors on the robot
   switch(ActionRobotDrive) {
     case DRIVE_STOP:
-      doTurnLedOff(LED_2);
-      doTurnLedOff(LED_4);
+      doTurnLedOff(H_BRIDGE_ENA);
+      doTurnLedOff(H_BRIDGE_ENB);
       /* Add code in milestone 2 to turn off both left and right motors (LEDs right now). 
         Use the doTurnLedOff() function */
       /* DON'T FORGET TO USE YOUR LED VARIABLES AND NOT YOUR BUTTON VARIABLES FOR THIS!!! */
       break;
     case DRIVE_LEFT:
       /* Add code in milestone 2 to turn off the right and on the left LEDs */
-      doTurnLedOn(LED_2);
-      doTurnLedOff(LED_4);
+      doTurnLedOn(H_BRIDGE_ENA);
+      doTurnLedOff(H_BRIDGE_ENB);
       break;
     case DRIVE_RIGHT:
       /* Add code in milestone 2 */
-      doTurnLedOff(LED_2);
-      doTurnLedOn(LED_4);
+      doTurnLedOff(H_BRIDGE_ENA);
+      doTurnLedOn(H_BRIDGE_ENB);
       break;
     case DRIVE_STRAIGHT:
       /* Add code in milestone 2 */
-      doTurnLedOn(LED_2);
-      doTurnLedOn(LED_4);
+      doTurnLedOn(H_BRIDGE_ENA);
+      doTurnLedOn(H_BRIDGE_ENB);
       break;
   }
   
