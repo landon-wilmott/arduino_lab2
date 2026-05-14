@@ -21,6 +21,7 @@
 /* These initial includes allow you to use necessary libraries for
 your sensors and servos. */
 #include "Arduino.h"
+#include <CapacitiveSensor.h>
 
 //
 // Compiler defines: the compiler replaces each name with its assignment
@@ -54,6 +55,10 @@ your sensors and servos. */
 // These will replace buttons 1, 2, 4, 5
 
 // Capacitive sensor pins - Lab 4
+#define CAP_SENSOR_SEND     11
+#define CAP_SENSOR_RECEIVE  7
+#define CAP_SENSOR_SAMPLES 40
+#define CAP_SENSOR_TAU_THRESHOLD 25
 
 
 // Ultrasonic sensor pin - Lab 6
@@ -122,7 +127,7 @@ int SensedLightUp = DETECTION_NO;
 int SensedLightDown = DETECTION_NO;
 
 // Capacitive sensor input (using Definitions) - Lab 4
-//int SensedCapacitiveTouch = DETECTION_NO;
+int SensedCapacitiveTouch = DETECTION_NO;
 
 
 /***********************************************************/
@@ -159,6 +164,10 @@ void setup() {
   pinMode(BUTTON_4, INPUT);
   pinMode(BUTTON_5, INPUT);
 
+  //Set up capacitance pins
+  pinMode(CAP_SENSOR_RECEIVE, INPUT);
+  pinMode(CAP_SENSOR_SEND, OUTPUT); 
+
   //Set up servo - Lab 6
 
 }
@@ -171,7 +180,7 @@ void loop() {
   // This DebugStateOutput flag can be used to easily turn on the
   // serial debugging to know what the robot is perceiving and what
   // actions the robot wants to take.
-  int DebugStateOutput = true; // Change false to true to debug
+  int DebugStateOutput = false; // Change false to true to debug
   
   
   RobotPerception(); // PERCEPTION
@@ -197,6 +206,8 @@ void loop() {
   }
   RobotAction(); // ACTION
   Serial.print("\n");
+
+  isCapacitiveSensorTouched();
 }
 
 /**********************************************************************************************************
@@ -302,6 +313,18 @@ bool isCollision() {
 bool isCapacitiveSensorTouched() {
   //In lab 4 you will add a capacitive sensor, and
   // you will need to modify this function accordingly.
+  static CapacitiveSensor sensor = CapacitiveSensor(CAP_SENSOR_SEND, CAP_SENSOR_RECEIVE);
+  long tau = sensor.capacitiveSensor(CAP_SENSOR_SAMPLES); 
+  Serial.print("TAU:");
+  Serial.println(tau);
+  if (tau < 10) {
+    SensedCapacitiveTouch = DETECTION_YES;
+  } else {
+    SensedCapacitiveTouch = DETECTION_NO;
+  }
+  
+    
+  
 }
 
 
